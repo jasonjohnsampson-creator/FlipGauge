@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>FlipGauge v3</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="app-header">
+  <div><div class="eyebrow">AMAZON SOURCING ANALYZER</div><h1>FlipGauge <span>v3</span></h1></div>
+  <nav class="top-actions"><button id="connectionBtn" class="status-pill demo">Demo data</button><button id="settingsBtn" class="ghost">⚙ Settings</button><button id="installBtn" class="ghost hidden">Install</button></nav>
+</header>
+<main>
+  <section class="card hero">
+    <div><h2>Scan. Look up. Decide.</h2><p>Analyze profit, demand signals, competition, risks, and your buying rules in one screen.</p></div>
+    <div class="score-orb" id="scoreOrb"><span id="decision">READY</span><small id="scoreText">0/100</small></div>
+  </section>
+
+  <section class="card lookup-card">
+    <div class="section-title"><h3>Product lookup</h3><button id="scanBtn" class="primary">📷 Scan barcode</button></div>
+    <div id="scannerWrap" class="scanner hidden"><video id="video" playsinline></video><div class="scan-line"></div><button id="stopScanBtn" class="danger">Stop camera</button></div>
+    <div class="lookup-row">
+      <input id="productId" placeholder="UPC, EAN, or ASIN" autocomplete="off" />
+      <button id="lookupBtn" class="primary">Look up</button>
+    </div>
+    <div id="lookupMessage" class="message muted">Try demo UPC <b>012345678905</b>, <b>036000291452</b>, or ASIN <b>B0DEMO1234</b>.</div>
+  </section>
+
+  <section id="productPanel" class="card product-panel hidden">
+    <div class="product-summary">
+      <div class="product-image-wrap"><img id="productImage" alt="Product" /></div>
+      <div class="product-copy"><div class="eyebrow" id="productCategory">CATEGORY</div><h3 id="productName">Product name</h3><p id="productMeta" class="muted"></p><div class="chips"><span id="eligibilityChip" class="chip"></span><span id="amazonChip" class="chip"></span><span id="hazmatChip" class="chip"></span></div></div>
+    </div>
+    <div class="signal-grid">
+      <div><span>Buy Box</span><strong id="buyBox">$0.00</strong></div><div><span>Lowest FBA</span><strong id="lowestFba">$0.00</strong></div><div><span>Sales rank</span><strong id="salesRank">—</strong></div><div><span>Est. sales/mo</span><strong id="salesEstimate">—</strong></div><div><span>FBA sellers</span><strong id="fbaSellers">—</strong></div><div><span>Amazon on listing</span><strong id="amazonOnListing">—</strong></div>
+    </div>
+  </section>
+
+
+  <section id="marketPanel" class="card hidden">
+    <div class="section-title"><h3>90-day market intelligence</h3><div class="actions"><button id="range30Btn" class="ghost small">30D</button><button id="range90Btn" class="primary small">90D</button></div></div>
+    <div class="market-grid">
+      <div class="chart-card"><canvas id="priceChart" height="230" aria-label="Price history chart"></canvas><div class="chart-legend"><span>Buy Box</span><span>Lowest FBA</span></div></div>
+      <div class="market-stats">
+        <div><span>90D average</span><strong id="avg90">—</strong></div><div><span>90D low</span><strong id="low90">—</strong></div><div><span>90D high</span><strong id="high90">—</strong></div><div><span>Price stability</span><strong id="priceStability">—</strong></div><div><span>Rank drops / mo</span><strong id="rankDrops">—</strong></div><div><span>Est. share / seller</span><strong id="sellerShare">—</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="variationsPanel" class="card hidden">
+    <div class="section-title"><h3>Variation analyzer</h3><span class="muted" id="variationSummary"></span></div>
+    <div class="table-wrap"><table><thead><tr><th>Variation</th><th>Price</th><th>Rank</th><th>Sales/mo</th><th>Sellers</th><th>Opportunity</th><th></th></tr></thead><tbody id="variationBody"></tbody></table></div>
+  </section>
+
+  <section class="card">
+    <div class="section-title"><h3>Price and profit alerts</h3><button id="createAlertBtn" class="primary">Create alert</button></div>
+    <div class="grid four"><label>Target Amazon price ($)<input id="alertPrice" type="number" min="0" step="0.01" value="34.99" /></label><label>Minimum profit ($)<input id="alertProfit" type="number" min="0" step="0.01" value="8.00" /></label><label>Maximum seller count<input id="alertSellers" type="number" min="1" step="1" value="12" /></label><label>Alert note<input id="alertNote" placeholder="Check local clearance aisle" /></label></div>
+    <div id="alertsList" class="alerts-list"></div>
+    <p class="hint">Version 3 checks alerts whenever the app opens or the product is looked up. Continuous cloud notifications require the future hosted backend.</p>
+  </section>
+
+  <section class="card">
+    <div class="section-title"><h3>Costs and fees</h3><button id="useBuyBoxBtn" class="ghost">Use Buy Box price</button></div>
+    <div class="grid four">
+      <label>Store cost ($)<input id="buyCost" type="number" min="0" step="0.01" value="10.00" /></label>
+      <label>Sales tax (%)<input id="salesTax" type="number" min="0" step="0.01" value="7.00" /></label>
+      <label>Amazon price ($)<input id="sellPrice" type="number" min="0" step="0.01" value="29.99" /></label>
+      <label>Referral fee (%)<input id="referralPct" type="number" min="0" step="0.01" value="15.00" /></label>
+      <label>FBA fee ($)<input id="fulfillmentFee" type="number" min="0" step="0.01" value="5.25" /></label>
+      <label>Inbound shipping ($)<input id="inboundShipping" type="number" min="0" step="0.01" value="0.75" /></label>
+      <label>Prep / label ($)<input id="prepCost" type="number" min="0" step="0.01" value="0.25" /></label>
+      <label>Storage / misc. ($)<input id="miscFees" type="number" min="0" step="0.01" value="0.20" /></label>
+      <label>Monthly units<input id="monthlyUnits" type="number" min="0" step="1" value="10" /></label>
+      <label>Discount / coupon ($)<input id="discount" type="number" min="0" step="0.01" value="0" /></label>
+      <label>Prep center fee ($)<input id="prepCenterFee" type="number" min="0" step="0.01" value="0" /></label>
+      <label>Return allowance (%)<input id="returnAllowance" type="number" min="0" step="0.1" value="0" /></label>
+    </div>
+  </section>
+
+  <section class="card results-card">
+    <div class="section-title"><h3>Analysis</h3><button id="saveBtn" class="primary">Save scan</button></div>
+    <div class="metrics">
+      <div><span>Net profit</span><strong id="profit">$0.00</strong></div><div><span>ROI</span><strong id="roi">0%</strong></div><div><span>Margin</span><strong id="margin">0%</strong></div><div><span>Break-even</span><strong id="breakEven">$0.00</strong></div><div><span>Total fees</span><strong id="amazonFees">$0.00</strong></div><div><span>Monthly profit</span><strong id="monthlyProfit">$0.00</strong></div><div><span>Max buy cost</span><strong id="maxBuyCost">$0.00</strong></div><div><span>Profit after returns</span><strong id="riskAdjustedProfit">$0.00</strong></div>
+    </div>
+    <div id="ruleChecks" class="rule-checks"></div>
+    <div class="fee-breakdown" id="feeBreakdown"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-title"><h3>Buy rules</h3><button id="resetRulesBtn" class="ghost">Reset</button></div>
+    <div class="grid four">
+      <label>Minimum profit ($)<input id="minProfit" type="number" min="0" step="0.01" value="5.00" /></label><label>Minimum ROI (%)<input id="minRoi" type="number" min="0" step="1" value="30" /></label><label>Minimum margin (%)<input id="minMargin" type="number" min="0" step="1" value="15" /></label><label>Maximum sellers<input id="maxSellers" type="number" min="1" step="1" value="20" /></label>
+    </div>
+    <p class="hint">The score blends profit, ROI, margin, competition, eligibility, Amazon presence, and hazard flags. You control the thresholds.</p>
+  </section>
+
+  <section class="card">
+    <div class="section-title"><h3>Saved scans</h3><div class="actions"><button id="exportBtn" class="ghost">Export CSV</button><button id="clearBtn" class="danger">Clear</button></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Product</th><th>Cost</th><th>Price</th><th>Profit</th><th>ROI</th><th>Score</th><th>Decision</th><th></th></tr></thead><tbody id="historyBody"></tbody></table></div>
+  </section>
+
+  <section class="card disclaimer"><strong>Connection note:</strong> Version 3 includes demo history, variations, offer intelligence, alerts, and a configurable API connector. Live Amazon pricing, official fees, eligibility, restrictions, and catalog data require your own authorized backend and Amazon Selling Partner API credentials. Secret keys should never be stored in this browser app.</section>
+</main>
+
+<div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-card"><div class="section-title"><h3>Connection settings</h3><button id="closeSettingsBtn" class="ghost">Close</button></div>
+    <label>Data mode<select id="dataMode"><option value="demo">Demo catalog</option><option value="api">Connected API</option></select></label>
+    <label>API base URL<input id="apiBaseUrl" placeholder="https://your-server.example.com/api" /></label>
+    <label>Optional access token<input id="apiToken" type="password" placeholder="App token, not Amazon secret keys" /></label>
+    <p class="hint">Expected endpoint: <code>GET /product-lookup?id=...</code>. See API-CONTRACT.md.</p>
+    <button id="saveConnectionBtn" class="primary full">Save connection</button>
+  </div>
+</div>
+<footer>FlipGauge v3 • Local history • Demo/live connector ready</footer>
+<script src="demo-catalog.js"></script><script src="app.js"></script>
+</body></html>
