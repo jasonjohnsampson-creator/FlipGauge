@@ -1,0 +1,29 @@
+{
+  "name": "FlipGauge Production Foundation",
+  "version": "0.1.0",
+  "created": "2026-08-04",
+  "database_tables": [
+    "profiles",
+    "organizations",
+    "organization_members",
+    "user_settings",
+    "products",
+    "scans",
+    "price_history",
+    "buy_lists",
+    "buy_list_items",
+    "alerts",
+    "provider_connections",
+    "audit_events"
+  ],
+  "authentication": [
+    "email/password signup",
+    "email confirmation",
+    "sign in",
+    "protected routes",
+    "password recovery",
+    "password update",
+    "sign out"
+  ],
+  "next_milestone": "Amazon SP-API and Keepa server integrations"
+}

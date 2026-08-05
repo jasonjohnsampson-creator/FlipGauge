@@ -1,34 +1,32 @@
-# FlipGauge Phase 1 · Milestone 2
+# FlipGauge Production v0.1
 
-A polished React + TypeScript sourcing dashboard prepared for Vercel.
+This is the first real production foundation for FlipGauge.
 
-## Added in this milestone
+## Built in this release
 
-- Working sidebar navigation
-- Dashboard, product lookup, scan history, alerts, calculator, and settings views
-- Mobile slide-out navigation
-- Refined FlipGauge branding and founder dashboard
-- CSV scan-history export and clear-history controls
-- Local prototype alert toggles
-- Data-connection status area for Amazon SP-API and Keepa
-- Existing barcode scanner, recommendation engine, price chart, fee calculator, and saved scans
+- Next.js App Router production scaffold
+- TypeScript
+- Supabase PostgreSQL database
+- Supabase email/password authentication
+- Email confirmation callback
+- Password recovery and update flow
+- Protected dashboard
+- Server-side session validation
+- Next.js session-refresh proxy
+- User profiles and seller settings
+- Optional organizations and team memberships
+- Products, scans, price history, buy lists, alerts, provider connections, and audit events
+- Row Level Security policies
+- Production setup and deployment instructions
 
-## Run locally
+## Not connected yet
 
-```bash
-npm install
-npm run dev
-```
+- Amazon SP-API
+- Keepa
+- Payments and subscriptions
+- Real product scanning workflow
+- Background alert workers
 
-## Deploy on Vercel
+Those are the next production milestones. Demo credentials and fictional market data are not included in the production database.
 
-Upload all project files to the root of the GitHub repository. Vercel should detect Vite automatically. Build command: `npm run build`. Output directory: `dist`.
-
-## Demo codes
-
-- `012345678905`
-- `036000291452`
-- `B0DEMO1234`
-- `B0RISK9999`
-
-Demo values are fictional. Live Amazon data requires a secure server-side integration. Never put Amazon or Keepa secret keys in browser code.
+Read `SETUP.md` before running the application.
